@@ -78,7 +78,7 @@ def add_cyclic_point(data, coord=None, rowcoord=None, axis=-1):
      [ 0. 1. 2. 3. 4. 5. 0.]
      [ 0. 1. 2. 3. 4. 5. 0.]]
     >>> print(cyclic_lons)
-    [   0.  60.  120.  180.  240.  300.  360.]
+    [   0.   60.  120.  180.  240.  300.  360.]
 
     Adding a cyclic point to a data array and an associated 2-dimensional
     coordinate.
@@ -152,12 +152,12 @@ def add_cyclic_point(data, coord=None, rowcoord=None, axis=-1):
     """
     if coord is not None:
         if (coord.ndim < 1) or (coord.ndim > 2):
-            estr  = 'The coordinate must be 1- or 2-dimensional.'
+            estr = 'The coordinate must be 1- or 2-dimensional.'
             estr += ' coord.shape: '+str(coord.shape)
             raise ValueError(estr)
         if (coord.ndim == 1):
             if len(coord) != data.shape[axis]:
-                estr  = 'The length of the coordinate does not match'
+                estr = 'The length of the coordinate does not match'
                 estr += ' the size of the corresponding dimension of'
                 estr += ' the data array: len(coord) ='
                 estr += ' {}, data.shape[{}] = {}.'.format(
@@ -186,7 +186,7 @@ def add_cyclic_point(data, coord=None, rowcoord=None, axis=-1):
             new_coord = np.ma.concatenate((coord, coord[0:1] + 360.))
         if (coord.ndim == 2):
             if coord.shape[-1] != data.shape[axis]:
-                estr  = 'coord.shape[-1] does not match'
+                estr = 'coord.shape[-1] does not match'
                 estr += ' the size of the corresponding dimension of'
                 estr += ' the data array: coord.shape[-1] ='
                 estr += ' {}, data.shape[{}] = {}.'.format(
@@ -194,7 +194,7 @@ def add_cyclic_point(data, coord=None, rowcoord=None, axis=-1):
                 raise ValueError(estr)
             if rowcoord is not None:
                 if not np.all(coord.shape == rowcoord.shape):
-                    estr  = 'rowcoord.shape does not match'
+                    estr = 'rowcoord.shape does not match'
                     estr += ' coord.shape: coord.shape[] =,'
                     estr += ' {}, rowcoord.shape = {}.'.format(
                         coord.shape, rowcoord.shape)
