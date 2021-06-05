@@ -365,12 +365,11 @@ def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
         else:
             caxis = -1
         if coord.shape[caxis] != data.shape[axis]:
-            estr = 'coord.shape[{}] does not match'
+            estr = 'coord.shape[{}] does not match'.format(caxis)
             estr += ' the size of the corresponding dimension of'
-            estr += ' the data array: coord.shape[{}] ='
+            estr += ' the data array: coord.shape[{}] ='.format(caxis)
             estr += ' {}, data.shape[{}] = {}.'.format(
-                caxis, caxis, coord.shape[caxis],
-                axis, data.shape[axis])
+                coord.shape[caxis], axis, data.shape[axis])
             raise ValueError(estr)
         if _has_cyclic(coord, axis=caxis, cyclic=cyclic, prec=prec):
             if rowcoord is None:
@@ -388,12 +387,12 @@ def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
                 else:
                     raxis = -1
                 if rowcoord.shape[raxis] != data.shape[axis]:
-                    estr = 'rowcoord.shape[{}] does not match'
+                    estr = 'rowcoord.shape[{}] does not match'.format(raxis)
                     estr += ' the size of the corresponding dimension of'
-                    estr += ' the data array: rowcoord.shape[{}] ='
+                    estr += ' the data array: rowcoord.shape[{}] ='.format(
+                        raxis)
                     estr += ' {}, data.shape[{}] = {}.'.format(
-                        raxis, raxis, rowcoord.shape[raxis],
-                        axis, data.shape[axis])
+                        rowcoord.shape[raxis], axis, data.shape[axis])
                     raise ValueError(estr)
                 orowcoord = _add_cyclic_data(rowcoord, axis=raxis)
                 return odata, ocoord, orowcoord
