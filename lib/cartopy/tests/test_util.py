@@ -70,10 +70,10 @@ class Test_add_cyclic_point:
 class Test_add_cyclic:
     """
     Test def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
-                        cyclic=360, prec=1e-4):
+                        cyclic=360, precision=1e-4):
     - variations of data, coord, and rowcoord with and without axis keyword
     - different unit of coord - cyclic
-    - detection of cyclic points - prec
+    - detection of cyclic points - precision
     - error catching
     """
 
@@ -326,19 +326,19 @@ class Test_add_cyclic:
         assert_array_equal(c_lons, r_lons)
         assert_array_equal(c_lats, r_lats)
 
-    def test_prec_has_cyclic(self):
-        '''Test prec keyword detecting cyclic point'''
+    def test_precision_has_cyclic(self):
+        '''Test precision keyword detecting cyclic point'''
         r_data = np.concatenate((self.data2d, self.data2d[:, :1]), axis=1)
         r_lons = np.concatenate((self.lons, np.array([360.+1e-3])))
-        c_data, c_lons = add_cyclic(r_data, coord=r_lons, prec=1e-2)
+        c_data, c_lons = add_cyclic(r_data, coord=r_lons, precision=1e-2)
         assert_array_equal(c_data, r_data)
         assert_array_equal(c_lons, r_lons)
 
-    def test_prec_has_cyclic_no(self):
-        '''Test prec keyword detecting no cyclic point'''
+    def test_precision_has_cyclic_no(self):
+        '''Test precision keyword detecting no cyclic point'''
         new_data = np.concatenate((self.data2d, self.data2d[:, :1]), axis=1)
         new_lons = np.concatenate((self.lons, np.array([360.+1e-3])))
-        c_data, c_lons = add_cyclic(new_data, coord=new_lons, prec=2e-4)
+        c_data, c_lons = add_cyclic(new_data, coord=new_lons, precision=2e-4)
         r_data = np.concatenate((new_data, new_data[:, :1]), axis=1)
         r_lons = np.concatenate((new_lons, np.array([360.])))
         assert_array_equal(c_data, r_data)
