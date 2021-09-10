@@ -248,9 +248,9 @@ def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
         The coordinate with a cyclic point, only returned if the `coord`
         keyword was supplied.
     cyclic_rowcoord
-        The row coordinate with the last column of the cyclic axis duplicated, only returned
-        if `coord` was 2- or n-dimensional and the `rowcoord` keyword was
-        supplied.
+        The row coordinate with the last column of the cyclic axis duplicated,
+        only returned if `coord` was 2- or n-dimensional and the `rowcoord`
+        keyword was supplied.
 
     Examples
     --------
