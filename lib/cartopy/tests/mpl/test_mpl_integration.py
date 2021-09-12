@@ -19,6 +19,8 @@ from cartopy.tests.mpl import MPL_VERSION, ImageTesting
 # This is due to a change in MPL 3.5 contour line paths changing
 # ever so slightly.
 contour_tol = 2.24
+
+
 @pytest.mark.natural_earth
 @ImageTesting(['global_contour_wrap'], style='mpl20',
               tolerance=contour_tol)
