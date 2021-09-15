@@ -11,6 +11,7 @@ import pytest
 
 from cartopy.util import add_cyclic_point
 from cartopy.util import add_cyclic
+from cartopy.util import has_cyclic
 
 
 class Test_add_cyclic_point:
@@ -384,3 +385,94 @@ class TestAddCyclic:
         '''Catch wrong axis keyword'''
         with pytest.raises(ValueError):
             add_cyclic(self.data2d, axis=-3)
+
+
+class TestHasCyclic:
+    """
+    Test def has_cyclic(lon, axis=-1, cyclic=360, precision=1e-4):
+    - variations of coord with and without axis keyword
+    - different unit of coord - cyclic
+    - detection of cyclic points - precision
+    """
+
+    @classmethod
+    def setup_class(cls):
+        # 1d lat (5) and lon (6)
+        # len(lat) != data.shape[0]
+        # len(lon) == data.shape[1]
+        cls.lons = np.arange(0, 360, 60)
+        cls.lats = np.arange(-90, 90, 180/5)
+        cls.clons = np.concatenate((cls.lons, np.array([360.])))
+        # 2d lat and lon
+        cls.lon2d, cls.lat2d = np.meshgrid(cls.lons, cls.lats)
+        cls.clon2d = np.concatenate(
+            (cls.lon2d,
+             np.full((cls.lon2d.shape[0], 1), 360.)),
+            axis=1)
+        # 3d lon
+        cls.lon3d = np.repeat(cls.lon2d, 4).reshape((*cls.lon2d.shape, 4))
+        cls.clon3d = np.concatenate(
+            (cls.lon3d,
+             np.full((cls.lon3d.shape[0], 1, cls.lon3d.shape[2]), 360.)),
+            axis=1)
+
+    def test_1d(self):
+        '''Test 1d'''
+        ido = has_cyclic(self.clons)
+        idont = has_cyclic(self.lons)
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_2d(self):
+        '''Test 2d'''
+        ido = has_cyclic(self.clon2d)
+        idont = has_cyclic(self.lon2d)
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_1d_axis(self):
+        '''Test 1d with axis keyword'''
+        ido = has_cyclic(self.clons, axis=0)
+        idont = has_cyclic(self.lons, axis=0)
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_2d_axis(self):
+        '''Test 2d with axis keyword'''
+        ido = has_cyclic(self.clon2d, axis=1)
+        idont = has_cyclic(self.lon2d, axis=1)
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_3d_axis(self):
+        '''Test 3d with axis keyword'''
+        ido = has_cyclic(self.clon3d, axis=1)
+        idont = has_cyclic(self.lon3d, axis=1)
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_masked_2d_axis(self):
+        '''Test masked 2d with axis keyword'''
+        new_clon = ma.masked_inside(self.clon2d, 100, 200)
+        new_lon = ma.masked_inside(self.lon2d, 100, 200)
+        ido = has_cyclic(new_clon, axis=1)
+        idont = has_cyclic(new_lon, axis=1)
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_3d_axis_cyclic(self):
+        '''Test 3d with axis and cyclic keywords'''
+        new_clons = np.deg2rad(self.clon3d)
+        new_lons = np.deg2rad(self.lon3d)
+        ido = has_cyclic(new_clons, axis=1, cyclic=np.deg2rad(360.))
+        idont = has_cyclic(new_lons, axis=1, cyclic=np.deg2rad(360.))
+        assert_equal(ido, True)
+        assert_equal(idont, False)
+
+    def test_1d_precision(self):
+        '''Test 1d with precision keyword'''
+        new_clons = np.concatenate((self.lons, np.array([360.+1e-3])))
+        ido = has_cyclic(new_clons, precision=1e-2)
+        idont = has_cyclic(new_clons, precision=2e-4)
+        assert_equal(ido, True)
+        assert_equal(idont, False)

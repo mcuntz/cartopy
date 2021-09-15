@@ -151,7 +151,7 @@ def _add_cyclic_lon(lon, axis=-1, cyclic=360):
     return npc.concatenate((lon, clon), axis=axis)
 
 
-def _has_cyclic(lon, axis=-1, cyclic=360, precision=1e-4):
+def has_cyclic(lon, axis=-1, cyclic=360, precision=1e-4):
     """
     Check if longitudes already have a cyclic point.
 
@@ -175,6 +175,26 @@ def _has_cyclic(lon, axis=-1, cyclic=360, precision=1e-4):
     -------
     True if a cyclic point was detected along the given axis,
     False otherwise.
+
+    Examples
+    --------
+    Check for cyclic longitudes in one dimension.
+    >>> import numpy as np
+    >>> lons = np.arange(0, 360, 60)
+    >>> clons = np.arange(0, 361, 60)
+    >>> print(has_cyclic(lons))
+    False
+    >>> print(has_cyclic(clons))
+    True
+
+    Check for cyclic longitudes in two dimensions.
+    >>> lats = np.arange(-90, 90, 30)
+    >>> lon2d, lat2d = np.meshgrid(lons, lats)
+    >>> clon2d, clat2d = np.meshgrid(clons, lats)
+    >>> print(has_cyclic(lon2d))
+    False
+    >>> print(has_cyclic(clon2d))
+    True
     """
     npc = np.ma if np.ma.is_masked(lon) else np
     # transform to 0-cyclic, assuming e.g. -180 to 180 if any < 0
@@ -351,12 +371,12 @@ def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
                 f' coord.shape[{caxis}] = {coord.shape[caxis]},'
                 f' data.shape[{axis}] = {data.shape[axis]}.')
         raise ValueError(estr)
-    if _has_cyclic(coord, axis=caxis, cyclic=cyclic, precision=precision):
+    if has_cyclic(coord, axis=caxis, cyclic=cyclic, precision=precision):
         if rowcoord is None:
             return data, coord
         # if rowcoord was given
         return data, coord, rowcoord
-    # if not _has_cyclic, add cyclic points to data and coord
+    # if not has_cyclic, add cyclic points to data and coord
     odata = _add_cyclic_data(data, axis=axis)
     ocoord = _add_cyclic_lon(coord, axis=caxis, cyclic=cyclic)
     if rowcoord is None:
