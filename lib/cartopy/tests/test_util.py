@@ -67,7 +67,7 @@ class Test_add_cyclic_point:
             add_cyclic_point(self.data2d, axis=-3)
 
 
-class Test_add_cyclic:
+class TestAddCyclic:
     """
     Test def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
                         cyclic=360, precision=1e-4):
