@@ -42,6 +42,13 @@ def add_cyclic_point(data, coord=None, axis=-1):
     Adding a cyclic point to a data array, where the cyclic dimension is
     the right-most dimension.
 
+    .. testsetup::
+        >>> from distutils.version import LooseVersion
+        >>> import numpy as np
+        >>> if LooseVersion(np.__version__) >= '1.14.0':
+        ...     # To provide consistent doctests.
+        ...     np.set_printoptions(legacy='1.13')
+
     >>> import numpy as np
     >>> data = np.ones([5, 6]) * np.arange(6)
     >>> cyclic_data = add_cyclic_point(data)
@@ -249,13 +256,8 @@ def add_cyclic(data, coord=None, rowcoord=None, axis=-1,
     --------
     Adding a cyclic point to a data array, where the cyclic dimension is
     the right-most dimension.
-    .. testsetup::
-        >>> from distutils.version import LooseVersion
-        >>> import numpy as np
-        >>> if LooseVersion(np.__version__) >= '1.14.0':
-        ...     # To provide consistent doctests.
-        ...     np.set_printoptions(legacy='1.13')
     >>> import numpy as np
+    >>> np.set_printoptions(legacy='1.13')
     >>> data = np.ones([5, 6]) * np.arange(6)
     >>> cyclic_data = add_cyclic(data)
     >>> print(cyclic_data)  # doctest: +NORMALIZE_WHITESPACE
